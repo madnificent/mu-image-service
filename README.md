@@ -2,7 +2,7 @@
 
 A service which yields resized images from high-resolution images in the backend.
 
-It is often needed to render images at various sizes in the frontend.  Uploading the images in various resolutions manually is a cumbersome effort which could be automatod.  The mu-image-service yields rescaled versions of images on demand and caches the intermediate results.
+It is often needed to render images at various sizes in the frontend.  Uploading the images in various resolutions manually is a cumbersome effort which could be automated.  The mu-image-service yields rescaled versions of images on demand and caches the intermediate results.
 
 ## How to use
 
@@ -17,7 +17,7 @@ Add the following snippet to your docker-compose.yml
       - ./data/files:/share
 ```
 
-Add the following in your disptacher.ex
+Add the following in your dispatcher.ex
 
 ```elixir
   match "/images/*path" do
