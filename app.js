@@ -26,6 +26,11 @@ if (!fs.existsSync(IMAGES_FOLDER)){
  */
 app.get('/image/:id', async function( req, res ) {
   const info = await getRawImageInfo( req.params.id );
+  if( ! info ) {
+    res.send("File not found", 404);
+    return;
+  }
+
   res.type( info.format );
 
   let { width, height } = req.query;
@@ -137,19 +142,22 @@ async function getRawImageInfo( id ) {
       }
     }`);
 
-  const { datasource: { value: datasource },
-          fdo: { value: originalFileUri },
-          format: { value: format } }
-        = res.results.bindings[0];
-
-  if( datasource.indexOf( "share://" ) === 0 ) {
-    const relativePath = datasource.slice( "share://".length );
-    return {
-      format,
-      originalFileUri,
-      path: `/share/${relativePath}`
-    };
+  if( res.results.bindings.length > 0 ) {
+    const { datasource: { value: datasource },
+            fdo: { value: originalFileUri },
+            format: { value: format } }
+          = res.results.bindings[0];
+    if( datasource.indexOf( "share://" ) === 0 ) {
+      const relativePath = datasource.slice( "share://".length );
+      return {
+        format,
+        originalFileUri,
+        path: `/share/${relativePath}`
+      };
+    } else {
+      throw "File location not found";
+    }
   } else {
-    throw "Could not find image";
+    return null;
   }
 }
