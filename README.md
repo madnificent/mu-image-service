@@ -10,7 +10,7 @@ Add the following snippet to your docker-compose.yml
 
 ```yaml
   imageservice:
-    image: madnificent/mu-image-service
+    image: madnificent/mu-image-service:0.0.1
     links:
       - db:database
     volumes:
