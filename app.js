@@ -125,6 +125,7 @@ function createResizedImageStream( { width, height, source } ) {
 
   const transform = sharp();
   transform.resize( width, height );
+  transform.on('error', (e) => console.error(e));
 
   return readStream.pipe( transform );
 }
