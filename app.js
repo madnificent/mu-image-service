@@ -78,6 +78,7 @@ async function cacheFile( stream, { width, height, source } ){
             ${width ? `${sparqlEscapeUri( imageFdoUri )} ext:imageWidth ${sparqlEscapeString( width + '' )}.` : '' }
             ${height ? `${sparqlEscapeUri( imageFdoUri )} ext:imageHeight ${sparqlEscapeString( height + '' )}.` : '' }
             ${sparqlEscapeUri( imageExtPath )}
+              a nfo:FileDataObject;
               mu:uuid ${sparqlEscapeString( pathUuid )};
               nie:dataSource ${sparqlEscapeUri( imageFdoUri )}.
           }
