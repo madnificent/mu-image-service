@@ -17,6 +17,11 @@ if (!fs.existsSync(IMAGES_FOLDER)){
     fs.mkdirSync(IMAGES_FOLDER);
 }
 
+function transferFailure(res, err, phase) {
+  res.send("Failed to transfer image", 500);
+  console.error(`Failed to transfer file ${phase &&`during ${phase}`}`, err);
+}
+
 /**
  * Yields an image with the desired size
  *
@@ -41,13 +46,21 @@ app.get('/image/:id', async function( req, res ) {
     width, height, source: info
   };
 
-  let existingImageStream = await findImageStream( imageInformation );
-  if( existingImageStream ) {
-    existingImageStream.pipe( res );
-  } else {
-    const source = createResizedImageStream( imageInformation );
-    cacheFile( source, imageInformation );
-    source.pipe( res );
+  try {
+    let existingImageStream = await findImageStream(imageInformation);
+
+    if (existingImageStream) {
+      existingImageStream.pipe(res);
+      existingImageStream.on("error", (e) => transferFailure(res, e, "existing image stream"));
+    } else {
+      const source = createResizedImageStream(imageInformation);
+      cacheFile(source, imageInformation);
+      source.pipe(res);
+      source.on("error", (e) => transferFailure(res, e, "new image stream"));
+    }
+  } catch (e) {
+    console.error("Could not find image stream", e);
+    res.send("File not found", 404);
   }
 });
 
