@@ -1,0 +1,11 @@
+pipeline:
+  build-and-push:
+    image: woodpeckerci/plugin-docker-buildx
+    settings:
+      repo: "madnificent/${CI_REPO_NAME%%-service}"
+      tags: latest
+      platforms: linux/amd64
+    secrets: [docker_username, docker_password]
+when:
+  event: push
+  branch: [master, main]
